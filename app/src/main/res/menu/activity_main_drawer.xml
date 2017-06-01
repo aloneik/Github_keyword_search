@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:checkableBehavior="single"
+        android:enabled="true">
+        <item
+            android:id="@+id/repository_search"
+            android:checkable="false"
+            android:title="Repository search" />
+        <item
+            android:id="@+id/users_search"
+            android:checkable="false"
+            android:title="Users search" />
+    </group>
+
+</menu>

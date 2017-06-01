@@ -1,0 +1,38 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.maxx.test2.TextFragment">
+
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="280dp"
+        android:text="@string/search_button_text" />
+
+    <EditText
+        android:id="@+id/editText"
+        style="@android:style/Widget.DeviceDefault.EditText"
+        android:layout_width="268dp"
+        android:layout_height="45dp"
+        android:freezesText="true"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:singleLine="true"
+        android:textColorLink="@android:color/holo_green_light" />
+
+    <ListView
+        android:id="@+id/data_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:clickable="false"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true"
+        android:saveEnabled="true"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollingCache="true" />
+
+</FrameLayout>
