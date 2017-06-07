@@ -81,15 +81,17 @@ public class UsrSearchFragment extends Fragment implements View.OnClickListener 
 
     public void onClick(View view){
         EditText ed = (EditText) getActivity().findViewById(R.id.editText);
-        Toast t = Toast.makeText(getContext(), ed.getText().toString(), Toast.LENGTH_SHORT);
-        t.show();
-        try {
-            new UsrSearchFragment.RequestAsyncTask().execute(
-                    new URL("https://api.github.com/search/"
-                            + this.getArguments().getString("search_type")
-                            + "?q=" + ed.getText().toString()));
-        } catch (java.net.MalformedURLException e){
-            e.printStackTrace();
+        if (!ed.getText().toString().equals("")) {
+            Toast t = Toast.makeText(getContext(), ed.getText().toString(), Toast.LENGTH_SHORT);
+            t.show();
+            try {
+                new UsrSearchFragment.RequestAsyncTask().execute(
+                        new URL("https://api.github.com/search/"
+                                + this.getArguments().getString("search_type")
+                                + "?q=" + ed.getText().toString() + "&per_page=100"));
+            } catch (java.net.MalformedURLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -140,18 +142,20 @@ public class UsrSearchFragment extends Fragment implements View.OnClickListener 
 
         @Override
         protected String doInBackground(URL... params) {
-            String response = null;
+            String response = "";
             try {
                 HttpURLConnection urlConnection = (HttpURLConnection) params[0].openConnection();
-                BufferedReader in = new BufferedReader(new InputStreamReader(
-                        urlConnection.getInputStream()));
-                StringBuffer buffer = new StringBuffer();
-                String inputLine;
-                while ((inputLine = in.readLine()) != null){
-                    buffer.append(inputLine);
-                }
+                if (urlConnection.getHeaderField("status").equals("200 OK")) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(
+                            urlConnection.getInputStream()));
+                    StringBuffer buffer = new StringBuffer();
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null) {
+                        buffer.append(inputLine);
+                    }
 
-                response = buffer.toString();
+                    response = buffer.toString();
+                }
             } catch (java.io.IOException e) {
                 e.printStackTrace();
             }
@@ -161,18 +165,19 @@ public class UsrSearchFragment extends Fragment implements View.OnClickListener 
 
         @Override
         protected void onPostExecute(String input) {
+            if (!input.equals("")) {
+                try {
+                    JSONObject jsonObject = new JSONObject(input);
+                    JSONArray receivedItems = jsonObject.getJSONArray("items");
+                    System.out.println(receivedItems.length());
+                    items.clear();
+                    for (int i = 0; i < receivedItems.length(); i++) {
+                        items.add(receivedItems.getJSONObject(i).getString("login"));
+                    }
 
-            try {
-                JSONObject jsonObject = new JSONObject(input);
-                JSONArray receivedItems = jsonObject.getJSONArray("items");
-                System.out.println(receivedItems.length());
-                items.clear();
-                for (int i = 0; i < receivedItems.length(); i++) {
-                    items.add(receivedItems.getJSONObject(i).getString("login"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
 
             if (items != null) {
